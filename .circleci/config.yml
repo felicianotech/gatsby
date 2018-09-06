@@ -2,9 +2,16 @@ workflows:
   version: 2
   main:
     jobs:
-      - node6
-      - node8
-      - node10
+      - unittest-prep
+      - unittest-node6:
+          requires:
+            - unittest-prep
+      - unittest-node8:
+          requires:
+            - unittest-prep
+      - unittest-node10:
+          requires:
+            - unittest-prep
       - lint
       - integration
       - ui
@@ -13,9 +20,9 @@ workflows:
 
 version: 2
 jobs:
-  node6:
+  unittest-prep:
     docker:
-      - image: circleci/node:6
+      - image: circleci/node:8
     steps:
       - checkout
       - restore_cache:
@@ -30,8 +37,24 @@ jobs:
           key: yarn-v1-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
 
-  node8:
+  unittest-node6:
+    docker:
+      - image: circleci/node:6
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run:
+          name: "Unit test with Node.js 6"
+          command: |
+            yarn run bootstrap
+            yarn jest -w 1
+
+  unittest-node8:
     docker:
       - image: circleci/node:8
     steps:
@@ -49,7 +72,7 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-  node10:
+  unittest-node10:
     docker:
       - image: circleci/node:10
     steps:
