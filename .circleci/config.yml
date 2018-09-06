@@ -32,7 +32,6 @@ jobs:
           name: "Unit test with Node.js 6"
           command: |
             yarn run bootstrap
-            yarn jest -w 1
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}
           paths:
