@@ -28,14 +28,6 @@ jobs:
       - restore_cache:
           keys:
             - yarn-v1-{{ checksum "yarn.lock" }}
-      - run:
-          name: "Bootstrap Unit Tests"
-          command: |
-            yarn run bootstrap
-      - save_cache:
-          key: yarn-v1-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
       - persist_to_workspace:
           root: /home/circleci
           paths:
