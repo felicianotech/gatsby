@@ -18,22 +18,36 @@ jobs:
       - image: circleci/node:6
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-v1-{{ checksum "yarn.lock" }}
       - run:
           name: "Unit test with Node.js 6"
           command: |
             yarn run bootstrap
             yarn jest -w 1
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
 
   node8:
     docker:
       - image: circleci/node:8
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-v1-{{ checksum "yarn.lock" }}
       - run:
           name: "Unit test with Node.js 8"
           command: |
             yarn run bootstrap
             yarn jest -w 1
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
 
   node10:
     docker:
