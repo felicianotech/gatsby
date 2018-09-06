@@ -29,7 +29,7 @@ jobs:
           keys:
             - yarn-v1-{{ checksum "yarn.lock" }}
       - run:
-          name: "Unit test with Node.js 6"
+          name: "Bootstrap Unit Tests"
           command: |
             yarn run bootstrap
       - save_cache:
@@ -50,7 +50,6 @@ jobs:
       - run:
           name: "Unit test with Node.js 6"
           command: |
-            yarn run bootstrap
             yarn jest -w 1
 
   unittest-node8:
@@ -64,7 +63,6 @@ jobs:
       - run:
           name: "Unit test with Node.js 8"
           command: |
-            yarn run bootstrap
             yarn jest -w 1
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}
@@ -82,7 +80,6 @@ jobs:
       - run:
           name: "Unit test with Node.js 10"
           command: |
-            yarn run bootstrap
             yarn jest -w 1
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}
