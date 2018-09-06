@@ -1,0 +1,103 @@
+workflows:
+  version: 2
+  main:
+    jobs:
+      - node6
+      - node8
+      - node10
+      - lint
+      - integration
+      - ui
+      - prod_ui
+
+
+version: 2
+jobs:
+  node6:
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - run:
+          name: "Unit test with Node.js 6"
+          command: |
+            yarn run bootstrap
+            yarn jest -w 1
+
+  node8:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run:
+          name: "Unit test with Node.js 8"
+          command: |
+            yarn run bootstrap
+            yarn jest -w 1
+
+  node10:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: "Unit test with Node.js 10"
+          command: |
+            yarn run bootstrap
+            yarn jest -w 1
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+  lint:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run:
+          name: "Lint Code"
+          command: |
+            yarn install
+            yarn lint
+
+  integration:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run:
+          name: "Integration Tests"
+          command: |
+            yarn install
+            yarn test:integration
+
+  ui:
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - run:
+          name: "UI Tests"
+          command: |
+            cd examples/gatsbygram
+            yarn install
+            yarn test
+
+  prod_ui:
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - run:
+          name: "UI Tests"
+          command: |
+            cd integration-tests/production-runtime
+            yarn install
+            yarn test
+
+# ToDo
+# Implement caching
