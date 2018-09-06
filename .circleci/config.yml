@@ -2,16 +2,16 @@ workflows:
   version: 2
   main:
     jobs:
-      - unittest-prep
-      - unittest-node6:
+      - unit-prep
+      - unit-node6:
           requires:
-            - unittest-prep
-      - unittest-node8:
+            - unit-prep
+      - unit-node8:
           requires:
-            - unittest-prep
-      - unittest-node10:
+            - unit-prep
+      - unit-node10:
           requires:
-            - unittest-prep
+            - unit-prep
       - lint
       - integration
       - ui
@@ -20,7 +20,7 @@ workflows:
 
 version: 2
 jobs:
-  unittest-prep:
+  unit-prep:
     docker:
       - image: circleci/node:8
     steps:
@@ -41,7 +41,7 @@ jobs:
           paths:
             - project
 
-  unittest-node6:
+  unit-node6:
     docker:
       - image: circleci/node:6
     steps:
@@ -52,7 +52,7 @@ jobs:
           command: |
             yarn jest -w 1
 
-  unittest-node8:
+  unit-node8:
     docker:
       - image: circleci/node:8
     steps:
@@ -69,7 +69,7 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-  unittest-node10:
+  unit-node10:
     docker:
       - image: circleci/node:10
     steps:
